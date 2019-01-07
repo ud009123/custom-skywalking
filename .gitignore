@@ -2,3 +2,5 @@
 target/
 .idea/
 skywalking-agent/
+docker/oap/*.tar.gz
+docker/ui/*.tar.gz
