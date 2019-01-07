@@ -1,0 +1,42 @@
+version: '3.3'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
+    container_name: elasticsearch
+    restart: always
+    ports:
+      - 8140:8140
+      - 8150:8150
+    environment:
+      discovery.type: single-node
+      http.port: 8140
+      transport.tcp.port: 8150 
+  oap:
+    image: skywalking/oap
+    container_name: oap
+    depends_on:
+      - elasticsearch
+    links:
+      - elasticsearch
+    restart: always
+    ports:
+      - 8160:8160
+      - 8170:8170
+      - 8180:8180
+    volumes:
+      - ./config:/apache-skywalking-apm-incubating/config:ro
+      - ./oaplogs:/apache-skywalking-apm-incubating/logs
+  ui:
+    image: skywalking/ui
+    container_name: ui
+    depends_on:
+      - oap
+    links:
+      - oap
+    restart: always
+    ports:
+      - 8190:8080
+    volumes:
+      - ./uilogs:/apache-skywalking-apm-incubating/logs
+    environment:
+      collector.ribbon.listOfServers: oap:8180
