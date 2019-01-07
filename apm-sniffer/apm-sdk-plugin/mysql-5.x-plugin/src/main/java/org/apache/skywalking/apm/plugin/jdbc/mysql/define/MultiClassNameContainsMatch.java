@@ -31,13 +31,16 @@ public class MultiClassNameContainsMatch implements IndirectMatch
 	@Override
 	public ElementMatcher.Junction buildJunction() {
 		ElementMatcher.Junction junction = not(isInterface())
-				.and(not(isAnnotatedWith(named("javax.xml.ws.WebServiceClient"))))
+				.and(
+						not(isAnnotatedWith(named("javax.xml.ws.WebServiceClient")))
+					.and(not(isAnnotatedWith(nameContains("javax.xml.bind.annotation"))))
+				)
 				.and(not(
 				nameContains("jalo")
-				.or(nameContains(".model."))
 				.or(nameContains("auxiliary"))
-				.or(nameContains("enums"))
 				.or(nameContains("BySpringCGLIB"))
+				.or(nameContains(".model."))
+				.or(nameContains(".enums."))
 				.or(nameContains("dao"))
 				.or(nameContains("dtos"))
 		));
